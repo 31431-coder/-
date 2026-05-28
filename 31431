@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>碳酸鈣能變豆花？！</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts for Cute Rounded Style -->
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght=500;700&family=Noto+Sans+TC:wght=400;700&display=swap" rel="stylesheet">
+  
+  <!-- MathJax Configuration & Script for LaTeX rendering -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    body {
+      font-family: 'Quicksand', 'Noto Sans TC', sans-serif;
+      user-select: none;
+    }
+    /* 基礎動畫 */
+    @keyframes bounce-slow {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .animate-bounce-slow {
+      animation: bounce-slow 2s infinite ease-in-out;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(1deg); }
+    }
+    .animate-float {
+      animation: float 3s infinite ease-in-out;
+    }
+    @keyframes bubble {
+      0% { transform: translateY(0) scale(0.8); opacity: 0; }
+      50% { opacity: 0.8; }
+      100% { transform: translateY(-40px) scale(1.2); opacity: 0; }
+    }
+    .bubble-particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: bubble 1.5s infinite ease-out;
+    }
+    /* 加熱蒸汽動畫 */
+    @keyframes steam {
+      0% { transform: translateY(0) scaleX(1); opacity: 0; }
+      50% { opacity: 0.4; }
+      100% { transform: translateY(-30px) scaleX(1.3); opacity: 0; }
+    }
+    .steam-line {
+      animation: steam 2s infinite ease-out;
+    }
+  </style>
+</head>
+<body class="bg-amber-50 text-stone-800 min-h-screen flex items-center justify-center p-2 sm:p-4">
+
+  <!-- 遊戲主容器 -->
+  <div id="game-container" class="w-full max-w-md bg-orange-100/70 border-4 border-orange-200 rounded-3xl shadow-2xl overflow-hidden relative aspect-[3/4] flex flex-col justify-between">
+    
+    <!-- 背景裝飾（溫馨廚房風） -->
+    <div class="absolute inset-0 bg-[radial-gradient(#fed7aa_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none"></div>
+
+    <!-- ==================== 畫面 1：遊戲主選單 ==================== -->
+    <div id="screen-main" class="flex-1 flex flex-col justify-between p-6 z-10 text-center">
+      <div class="mt-8">
+        <span class="bg-amber-200 text-amber-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">療癒化學廚房</span>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-amber-900 mt-3 tracking-tight drop-shadow-sm animate-bounce-slow">
+          碳酸鈣能變豆花？！
+        </h1>
+        <p class="text-amber-700 text-sm mt-2">一場美味與科學交織的神奇凝固實驗</p>
+      </div>
+
+      <!-- 可愛中心插圖 -->
+      <div class="flex justify-center my-4 relative">
+        <div class="relative w-40 h-40 animate-float">
+          <!-- 帶有表情的可愛豆花碗 -->
+          <svg viewBox="0 0 100 100" class="w-full h-full">
+            <!-- 桌子陰影 -->
+            <ellipse cx="50" cy="85" rx="35" ry="8" fill="#fcd34d" opacity="0.4"/>
+            <!-- 碗 -->
+            <path d="M15,50 Q15,80 50,80 Q85,80 85,50 Z" fill="#fff" stroke="#fdba74" stroke-width="4" />
+            <rect x="10" y="45" width="80" height="8" rx="4" fill="#ffedd5" stroke="#fdba74" stroke-width="3" />
+            <!-- 豆花本體 -->
+            <ellipse cx="50" cy="46" rx="33" ry="10" fill="#fef3c7" />
+            <!-- 糖水 -->
+            <path d="M25,47 Q50,54 75,47" stroke="#d97706" stroke-width="3" fill="none" />
+            <!-- 可愛紅豆 -->
+            <circle cx="40" cy="45" r="4" fill="#991b1b" />
+            <circle cx="46" cy="43" r="3.5" fill="#991b1b" />
+            <circle cx="36" cy="48" r="3" fill="#991b1b" />
+            <!-- 可愛眼睛與微笑 -->
+            <circle cx="43" cy="62" r="3" fill="#78350f" />
+            <circle cx="57" cy="62" r="3" fill="#78350f" />
+            <path d="M47,67 Q50,70 53,67" stroke="#78350f" stroke-width="2.5" fill="none" stroke-linecap="round" />
+            <ellipse cx="38" cy="64" rx="3" ry="1.5" fill="#fca5a5" />
+            <ellipse cx="62" cy="64" rx="3" ry="1.5" fill="#fca5a5" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="mb-8">
+        <button id="btn-start" class="w-full py-4 bg-gradient-to-r from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 text-white font-bold text-lg rounded-2xl shadow-lg transition-all transform active:scale-95 border-b-4 border-amber-700">
+          開始製作 👩‍🍳
+        </button>
+        <p class="text-amber-800/60 text-xs mt-3">設計者：814理化權威</p>
+      </div>
+    </div>
+
+    <!-- ==================== 畫面 2：廚房工作檯 ==================== -->
+    <div id="screen-game" class="hidden flex-1 flex flex-col justify-between p-4 z-10 relative">
+      <!-- 頂部進度條 -->
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-3 border-2 border-orange-100 flex justify-between items-center shadow-sm">
+        <div>
+          <span class="text-xs text-amber-600 font-bold">目前進度</span>
+          <div id="step-title" class="text-sm font-bold text-amber-900">步驟 1：選擇下一步</div>
+        </div>
+        <div class="bg-amber-100 px-3 py-1 rounded-lg text-xs font-bold text-amber-800" id="step-badge">
+          1 / 4
+        </div>
+      </div>
+
+      <!-- 核心操作區 -->
+      <div class="flex-1 my-4 bg-white/60 backdrop-blur-sm border-2 border-orange-200/50 rounded-2xl p-4 flex flex-col justify-center items-center relative overflow-hidden">
+        
+        <!-- 動態視覺效果顯示區 -->
+        <div id="stage-visual" class="w-full flex-1 flex flex-col justify-center items-center relative min-h-[160px]">
+          <!-- 這裡會由 JS 動態載入畫面 -->
+        </div>
+
+        <!-- 提示說明框 -->
+        <div id="action-instruction" class="w-full text-center py-2 px-3 bg-amber-50/90 border border-amber-200 rounded-xl text-xs sm:text-sm font-semibold text-amber-900 mb-2">
+          請選擇你要對「碳酸鈣」進行什麼操作？
+        </div>
+
+        <!-- 互動小遊戲控制器 -->
+        <div id="control-panel" class="w-full min-h-[70px] flex items-center justify-center">
+          <!-- 這裡會依據步驟載入不同的按鈕/計量條 -->
+        </div>
+      </div>
+
+      <!-- 底部動態溫馨提示 -->
+      <div class="text-center text-xs text-stone-500 py-1 flex justify-center items-center gap-1">
+        <span id="bottom-tooltip">💡 仔細觀察提示，利用合理的化學反應前進吧！</span>
+      </div>
+    </div>
+
+    <!-- ==================== 畫面 3：實驗失敗畫面 ==================== -->
+    <div id="screen-fail" class="hidden flex-1 flex flex-col justify-between p-6 z-10 text-center">
+      <div class="mt-6">
+        <span class="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full">實驗失敗啦！</span>
+        <h2 class="text-2xl font-bold text-red-800 mt-3">哎呀！溫度不夠高！</h2>
+      </div>
+
+      <!-- 失敗插圖 -->
+      <div class="flex justify-center my-4 relative">
+        <div class="w-48 h-48 relative">
+          <svg viewBox="0 0 120 120" class="w-full h-full">
+            <!-- 酒精燈 -->
+            <path d="M40,90 L80,90 L75,105 L45,105 Z" fill="#94a3b8" />
+            <path d="M50,90 L50,80 Q50,75 55,75 L65,75 Q70,75 70,80 L70,90 Z" fill="#cbd5e1" />
+            <ellipse cx="60" cy="75" rx="3" ry="5" fill="#f43f5e" />
+            
+            <!-- 固定向上、絕對不顛倒的微弱小火 -->
+            <path d="M60,48 C52,60 52,72 60,75 C68,72 68,60 60,48 Z" fill="#f97316" class="animate-bounce" />
+            
+            <!-- 大理石(碳酸鈣) -->
+            <path d="M35,40 L50,25 L75,25 L90,45 L70,60 L45,55 Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="3"/>
+            <!-- 暈倒的眼睛 -->
+            <path d="M50,38 L56,44 M56,38 L50,44" stroke="#64748b" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M68,38 L74,44 M74,38 L68,44" stroke="#64748b" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M55,50 Q62,55 69,50" stroke="#64748b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+            <!-- 溫度不足標示 -->
+            <text x="80" y="25" fill="#ef4444" font-size="12" font-weight="bold">???</text>
+            <text x="15" y="30" fill="#ef4444" font-size="10" font-weight="bold">只有 100°C</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 失敗科普提示 -->
+      <div class="bg-red-50 border-2 border-red-200 rounded-2xl p-4 text-left">
+        <p class="text-red-700 text-sm font-bold leading-relaxed">
+          ⚠️ 碳酸鈣要加熱到 <span class="text-red-900 text-base underline">800 度</span> 才能分解成氧化鈣喔！一般的酒精燈是辦不到的！
+        </p>
+        <p class="text-stone-600 text-xs mt-2 leading-relaxed">
+          提示：想要提取鈣離子，請試著利用「醋酸」跟「碳酸鈣」產生化學反應，生成容易溶解的醋酸鈣吧！
+        </p>
+      </div>
+
+      <div class="mb-6">
+        <button id="btn-retry" class="w-full py-4 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white font-bold text-lg rounded-2xl shadow-lg transition-all transform active:scale-95 border-b-4 border-red-800">
+          重新嘗試 🔄
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== 畫面 4：實驗成功與化學原理解析 ==================== -->
+    <div id="screen-success" class="hidden flex-1 flex flex-col justify-between p-5 z-10 overflow-y-auto">
+      <div class="text-center mt-2">
+        <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">🎉 實驗大成功！</span>
+        <h2 class="text-2xl font-extrabold text-emerald-900 mt-2">美味又神奇的豆花完成！</h2>
+      </div>
+
+      <!-- 成功美味豆花圖 -->
+      <div class="flex justify-center my-3 relative">
+        <div class="w-36 h-36 relative animate-bounce-slow">
+          <svg viewBox="0 0 100 100" class="w-full h-full">
+            <!-- 陰影 -->
+            <ellipse cx="50" cy="85" rx="38" ry="8" fill="#a7f3d0" />
+            <!-- 熱氣 -->
+            <path d="M40,25 Q45,15 40,5 M50,23 Q55,12 50,5 M60,25 Q65,15 60,5" stroke="#cbd5e1" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6" class="steam-line" />
+            <!-- 碗 -->
+            <path d="M15,50 Q15,85 50,85 Q85,85 85,50 Z" fill="#fff" stroke="#10b981" stroke-width="4" />
+            <rect x="10" y="45" width="80" height="8" rx="4" fill="#d1fae5" stroke="#10b981" stroke-width="3" />
+            <!-- 滑嫩豆花 -->
+            <ellipse cx="50" cy="46" rx="33" ry="10" fill="#fef3c7" />
+            <!-- 薑汁糖水 -->
+            <path d="M22,46 Q50,56 78,46" stroke="#b45309" stroke-width="4" fill="none" opacity="0.8" />
+            <ellipse cx="45" cy="48" rx="10" ry="4" fill="#d97706" opacity="0.3" />
+            <!-- 紅豆與花生配料 -->
+            <circle cx="36" cy="44" r="4.5" fill="#7f1d1d" />
+            <circle cx="43" cy="43" r="4" fill="#7f1d1d" />
+            <circle cx="31" cy="47" r="3.5" fill="#7f1d1d" />
+            <ellipse cx="62" cy="46" rx="5" ry="3.5" fill="#fef08a" stroke="#ca8a04" stroke-width="1" />
+            <ellipse cx="68" cy="45" rx="4.5" ry="3" fill="#fef08a" stroke="#ca8a04" stroke-width="1" />
+            <!-- 亮晶晶 -->
+            <path d="M20,25 L22,20 L27,22 L22,24 Z" fill="#fbbf24" />
+            <path d="M75,28 L77,23 L82,25 L77,27 Z" fill="#fbbf24" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- 化學原理解釋欄 (使用 LaTeX 格式，會由 MathJax 自動編譯) -->
+      <div class="bg-emerald-50/90 border-2 border-emerald-200 rounded-2xl p-4 text-stone-700">
+        <h3 class="text-sm font-bold text-emerald-900 mb-2 border-b border-emerald-200 pb-1 flex items-center gap-1">
+          🔬 <span>化學原理大揭密！</span>
+        </h3>
+        
+        <!-- 步驟 1 原理 -->
+        <div class="mb-3 text-xs leading-relaxed">
+          <p class="font-bold text-emerald-800">第一步：製造可溶性鈣離子</p>
+          <p class="text-stone-600">
+            不溶於水的碳酸鈣 ($CaCO_3$) 遇到醋酸 ($CH_3COOH$)，會進行酸鹼反應釋放二氧化碳氣體，並生成極易溶於水的<strong>醋酸鈣</strong>！
+          </p>
+          <div class="bg-white/90 p-2 rounded border border-emerald-100 font-serif text-center text-xs text-emerald-900 font-bold mt-1.5 shadow-sm">
+            $$CaCO_3 + 2CH_3COOH \rightarrow (CH_3COO)_2Ca + H_2O + CO_2\uparrow$$
+          </div>
+        </div>
+
+        <!-- 步驟 2 原理 -->
+        <div class="text-xs leading-relaxed">
+          <p class="font-bold text-emerald-800">第二步：鈣離子與蛋白質凝聚</p>
+          <p class="text-stone-600">
+            加熱豆漿能使蛋白質變性展開，這時倒入醋酸鈣溶液，解離出的<strong>鈣離子 ($Ca^{2+}$)</strong> 會像黏著劑一樣把帶負電荷的豆漿蛋白質緊緊連結，發生凝聚，就變成滑嫩的豆花囉！
+          </p>
+        </div>
+      </div>
+
+      <!-- 重新遊玩按鈕 -->
+      <div class="mt-4">
+        <button id="btn-restart" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-lg rounded-2xl shadow-lg transition-all transform active:scale-95 border-b-4 border-emerald-800">
+          再做一次豆花 😋
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 遊戲核心邏輯 JS -->
+  <script>
+    // --- 遊戲狀態與定時器管理 ---
+    let currentStep = 1; 
+    const state = {
+      calciumCarbonate: true,
+      hasAceticAcid: false,
+      hasCalciumAcetate: false,
+      soyMilkHeated: false,
+      stirCount: 0,
+    };
+
+    // 全域安全清除定時器
+    let tempInterval = null;
+    let gaugeInterval = null;
+    let countdownInterval = null;
+
+    function clearAllIntervals() {
+      if (tempInterval) { clearInterval(tempInterval); tempInterval = null; }
+      if (gaugeInterval) { clearInterval(gaugeInterval); gaugeInterval = null; }
+      if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+    }
+
+    // --- DOM 節點獲取 ---
+    const scrMain = document.getElementById('screen-main');
+    const scrGame = document.getElementById('screen-game');
+    const scrFail = document.getElementById('screen-fail');
+    const scrSuccess = document.getElementById('screen-success');
+
+    const btnStart = document.getElementById('btn-start');
+    const btnRetry = document.getElementById('btn-retry');
+    const btnRestart = document.getElementById('btn-restart');
+
+    const stageVisual = document.getElementById('stage-visual');
+    const actionInstruction = document.getElementById('action-instruction');
+    const controlPanel = document.getElementById('control-panel');
+    const stepTitle = document.getElementById('step-title');
+    const stepBadge = document.getElementById('step-badge');
+    const bottomTooltip = document.getElementById('bottom-tooltip');
+
+    // --- 事件監聽器 ---
+    btnStart.addEventListener('click', () => switchScreen(scrGame));
+    btnRetry.addEventListener('click', () => {
+      resetGame();
+      switchScreen(scrGame);
+    });
+    btnRestart.addEventListener('click', () => {
+      resetGame();
+      switchScreen(scrMain);
+    });
+
+    window.onload = function () {
+      resetGame();
+    };
+
+    // 畫面切換與 MathJax 重新渲染處理
+    function switchScreen(targetScreen) {
+      clearAllIntervals();
+      [scrMain, scrGame, scrFail, scrSuccess].forEach(scr => scr.classList.add('hidden'));
+      targetScreen.classList.remove('hidden');
+      
+      if (targetScreen === scrGame) {
+        renderCurrentStep();
+      }
+
+      // 每次切換畫面時手動觸發 MathJax 排版，確保 LaTeX 式子渲染正確
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise().catch((err) => console.log("MathJax error:", err.message));
+      }
+    }
+
+    function resetGame() {
+      clearAllIntervals();
+      currentStep = 1;
+      state.calciumCarbonate = true;
+      state.hasAceticAcid = false;
+      state.hasCalciumAcetate = false;
+      state.soyMilkHeated = false;
+      state.stirCount = 0;
+    }
+
+    // --- 渲染當前關卡/步驟 ---
+    function renderCurrentStep() {
+      clearAllIntervals();
+      stageVisual.innerHTML = '';
+      controlPanel.innerHTML = '';
+
+      switch (currentStep) {
+        case 1:
+          setupStep1();
+          break;
+        case 2:
+          setupStep2();
+          break;
+        case 3:
+          setupStep3();
+          break;
+        case 4:
+          setupStep4();
+          break;
+      }
+    }
+
+    // --- 步驟 1：大理石或醋酸的二選一抉擇 ---
+    function setupStep1() {
+      stepTitle.innerText = "步驟 1：處理不溶於水的碳酸鈣";
+      stepBadge.innerText = "1 / 4";
+      actionInstruction.innerText = "現在桌上有碳酸鈣固體。你打算怎麼提取鈣離子？";
+      bottomTooltip.innerText = "💡 提示：大理石（碳酸鈣）直接乾燒是無法做成豆花的喔！";
+
+      // 試管與碳酸鈣大理石
+      stageVisual.innerHTML = `
+        <div class="relative w-36 h-36 flex items-center justify-center">
+          <svg viewBox="0 0 100 100" class="w-full h-full">
+            <!-- 燒杯 -->
+            <path d="M30,20 L30,85 Q30,90 35,90 L65,90 Q70,90 70,85 L70,20" stroke="#78350f" stroke-width="3" fill="none" />
+            <line x1="25" y1="20" x2="75" y2="20" stroke="#78350f" stroke-width="3" stroke-linecap="round" />
+            <!-- 碳酸鈣固體 -->
+            <path d="M35,88 L45,72 L55,75 L65,88 Z" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2" />
+            <path d="M45,88 L52,78 L60,88 Z" fill="#94a3b8" stroke="#64748b" stroke-width="2" />
+            <text x="50" y="55" fill="#475569" font-size="8" font-weight="bold" text-anchor="middle">碳酸鈣 CaCO₃</text>
+          </svg>
+        </div>
+      `;
+
+      // 酒精燈與醋酸兩個選項
+      controlPanel.innerHTML = `
+        <div class="flex gap-4 w-full px-2">
+          <button id="btn-choice-fire" class="flex-1 py-3 bg-amber-500 text-white font-bold rounded-xl shadow active:scale-95 transition-all text-xs border-b-4 border-amber-700">
+            🔥 用酒精燈加熱
+          </button>
+          <button id="btn-choice-acid" class="flex-1 py-3 bg-orange-400 text-white font-bold rounded-xl shadow active:scale-95 transition-all text-xs border-b-4 border-orange-600">
+            🧪 倒入醋酸混合
+          </button>
+        </div>
+      `;
+
+      document.getElementById('btn-choice-fire').addEventListener('click', () => {
+        switchScreen(scrFail);
+      });
+
+      document.getElementById('btn-choice-acid').addEventListener('click', () => {
+        startPouringGame();
+      });
+    }
+
+    // --- 步驟 1-遊戲：控制計量條倒入醋酸 ---
+    function startPouringGame() {
+      actionInstruction.innerText = "按住下方按鈕「倒入醋酸」，並在能量指針停在綠色完美區間時放開！";
+      
+      stageVisual.innerHTML = `
+        <div class="relative w-44 h-36 flex justify-around items-center">
+          <svg viewBox="0 0 120 100" class="w-full h-full">
+            <!-- 燒杯 -->
+            <path d="M15,30 L15,85 Q15,90 20,90 L50,90 Q55,90 55,85 L55,30" stroke="#78350f" stroke-width="3" fill="none" />
+            <line x1="10" y1="30" x2="60" y2="30" stroke="#78350f" stroke-width="3" />
+            <!-- 碳酸鈣固體 -->
+            <path d="M20,88 L30,75 L42,78 L50,88 Z" fill="#cbd5e1" stroke="#94a3b8" />
+            
+            <!-- 醋酸瓶子傾倒 -->
+            <g id="acid-bottle" transform="translate(60, 10) rotate(15)">
+              <rect x="10" y="20" width="25" height="35" rx="4" fill="#fb923c" opacity="0.8" stroke="#ea580c" stroke-width="2"/>
+              <rect x="17" y="10" width="11" height="10" fill="#ffedd5" stroke="#ea580c" stroke-width="1.5" />
+              <text x="22" y="42" fill="#fff" font-size="8" font-weight="bold" text-anchor="middle">醋酸</text>
+            </g>
+            
+            <!-- 傾倒的液體水流 (初始隱藏) -->
+            <path id="liquid-pour" d="M72,25 L35,60" stroke="#fed7aa" stroke-width="4" stroke-linecap="round" class="hidden" />
+          </svg>
+        </div>
+
+        <!-- 計量條 -->
+        <div class="w-4/5 bg-gray-200 rounded-full h-6 relative overflow-hidden border-2 border-stone-400 mt-2">
+          <!-- 完美綠色落點 -->
+          <div class="absolute left-[65%] w-[20%] h-full bg-emerald-400"></div>
+          <!-- 指針 -->
+          <div id="gauge-pointer" class="absolute left-0 w-2 h-full bg-orange-600 transition-all duration-75"></div>
+        </div>
+      `;
+
+      controlPanel.innerHTML = `
+        <button id="btn-pour" class="w-full py-4 bg-orange-500 active:bg-orange-600 text-white font-bold rounded-2xl shadow-lg border-b-4 border-orange-700 active:border-b-0 transition-all">
+          按住「倒入醋酸」🧪
+        </button>
+      `;
+
+      const pointer = document.getElementById('gauge-pointer');
+      const liquidPour = document.getElementById('liquid-pour');
+      const bottle = document.getElementById('acid-bottle');
+      const btnPour = document.getElementById('btn-pour');
+
+      let gaugeValue = 0;
+      let goingUp = true;
+
+      // 開始指針擺動 (擺動定時器)
+      gaugeInterval = setInterval(() => {
+        if (goingUp) {
+          gaugeValue += 2.5;
+          if (gaugeValue >= 100) goingUp = false;
+        } else {
+          gaugeValue -= 2.5;
+          if (gaugeValue <= 0) goingUp = true;
+        }
+        if (pointer) pointer.style.left = `${gaugeValue}%`;
+      }, 30);
+
+      let isHolding = false;
+      
+      const startPour = (e) => {
+        e.preventDefault();
+        isHolding = true;
+        if (liquidPour) liquidPour.classList.remove('hidden');
+        if (bottle) bottle.setAttribute('transform', 'translate(50, 10) rotate(-45)');
+      };
+
+      const endPour = (e) => {
+        if (!isHolding) return;
+        isHolding = false;
+        clearInterval(gaugeInterval);
+        gaugeInterval = null;
+        
+        if (liquidPour) liquidPour.classList.add('hidden');
+        if (bottle) bottle.setAttribute('transform', 'translate(60, 10) rotate(15)');
+
+        // 判斷綠色區域 (65% ~ 85%)
+        if (gaugeValue >= 65 && gaugeValue <= 85) {
+          showReactionAnimation();
+        } else {
+          actionInstruction.innerText = "醋酸倒太多或太少了！比例不對，再試一次吧！";
+          setTimeout(() => startPouringGame(), 2000);
+        }
+      };
+
+      btnPour.addEventListener('mousedown', startPour);
+      btnPour.addEventListener('mouseup', endPour);
+      btnPour.addEventListener('touchstart', startPour);
+      btnPour.addEventListener('touchend', endPour);
+    }
+
+    // 步驟 1 成功：啵啵啵反應動畫
+    function showReactionAnimation() {
+      actionInstruction.innerText = "啵啵啵！碳酸鈣與醋酸劇烈反應，釋放二氧化碳並產生醋酸鈣！";
+      controlPanel.innerHTML = `<span class="text-sm font-bold text-orange-600 animate-pulse">正在化學反應中...</span>`;
+
+      stageVisual.innerHTML = `
+        <div class="relative w-36 h-36 flex items-center justify-center">
+          <div id="bubble-container" class="absolute inset-0"></div>
+          <svg viewBox="0 0 100 100" class="w-full h-full">
+            <!-- 燒杯 -->
+            <path d="M30,20 L30,85 Q30,90 35,90 L65,90 Q70,90 70,85 L70,20" stroke="#78350f" stroke-width="3" fill="none" />
+            <line x1="25" y1="20" x2="75" y2="20" stroke="#78350f" stroke-width="3" />
+            <!-- 正在溶解的大理石 -->
+            <path d="M35,88 L45,78 L55,80 L65,88 Z" fill="#e2e8f0" stroke="#cbd5e1" opacity="0.6" />
+            <!-- 液體上升 -->
+            <path d="M31,60 Q50,62 69,60 L69,88 Q50,91 31,88 Z" fill="#ffedd5" opacity="0.8" />
+          </svg>
+        </div>
+      `;
+
+      // 動態生成二氧化碳氣泡
+      const container = document.getElementById('bubble-container');
+      const createBubble = () => {
+        const b = document.createElement('div');
+        b.className = 'bubble-particle';
+        const size = Math.random() * 8 + 4;
+        b.style.width = `${size}px`;
+        b.style.height = `${size}px`;
+        b.style.left = `${Math.random() * 60 + 20}%`;
+        b.style.bottom = '20px';
+        b.style.animationDuration = `${Math.random() * 1 + 0.5}s`;
+        if (container) container.appendChild(b);
+        setTimeout(() => b.remove(), 1500);
+      };
+
+      const bubbler = setInterval(createBubble, 100);
+
+      setTimeout(() => {
+        clearInterval(bubbler);
+        state.hasCalciumAcetate = true;
+        currentStep = 2; // 跳轉到加熱豆漿步驟
+        renderCurrentStep();
+      }, 3500);
+    }
+
+
+    // --- 步驟 2：加熱豆漿 ---
+    function setupStep2() {
+      stepTitle.innerText = "步驟 2：加熱濃郁豆漿";
+      stepBadge.innerText = "2 / 4";
+      actionInstruction.innerText = "將溫度指針維持在中間紅色區間！太冷或太熱都不行喔！";
+      bottomTooltip.innerText = "💡 提示：點擊「添加燃料」按鈕能往右拉升溫度，停止按壓則會冷卻。";
+
+      stageVisual.innerHTML = `
+        <div class="relative w-36 h-36 flex flex-col items-center justify-center">
+          <svg viewBox="0 0 100 100" class="w-full h-full">
+            <!-- 底部酒精燈 -->
+            <path d="M35,85 L65,85 L60,95 L40,95 Z" fill="#64748b" />
+            <rect x="47" y="78" width="6" height="8" fill="#94a3b8" />
+            
+            <!-- 燈火 (精確重建的向上燃燒火焰 Path) -->
+            <path id="lamp-flame" d="M50,45 C42,55 42,70 50,75 C58,70 58,55 50,45 Z" fill="#f97316" class="animate-pulse hidden" />
+            
+            <!-- 水蒸氣 (加熱高溫時顯示) -->
+            <g id="steam-group" class="hidden">
+              <path d="M40,25 Q43,15 40,8" stroke="#cbd5e1" stroke-width="2" fill="none" class="steam-line" />
+              <path d="M50,23 Q53,13 50,8" stroke="#cbd5e1" stroke-width="2" fill="none" class="steam-line" style="animation-delay: 0.5s;" />
+              <path d="M60,25 Q63,15 60,8" stroke="#cbd5e1" stroke-width="2" fill="none" class="steam-line" style="animation-delay: 1s;" />
+            </g>
+            <!-- 豆漿碗 -->
+            <path d="M25,35 Q25,65 50,65 Q75,65 75,35 Z" fill="#fff" stroke="#f59e0b" stroke-width="3" />
+            <rect x="20" y="32" width="60" height="5" rx="2" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" />
+            <ellipse cx="50" cy="34" rx="24" ry="5" fill="#fffbfe" />
+          </svg>
+        </div>
+
+        <!-- 溫度狀態條 (紅色完美區間在中間 35% ~ 65%) -->
+        <div class="w-4/5 bg-gray-200 rounded-full h-6 relative overflow-hidden border-2 border-stone-400 mt-2">
+          <div class="absolute left-[35%] w-[30%] h-full bg-red-400"></div>
+          <div id="temp-pointer" class="absolute left-0 w-3 h-full bg-stone-800 rounded"></div>
+        </div>
+      `;
+
+      controlPanel.innerHTML = `
+        <button id="btn-heat" class="w-full py-4 bg-red-500 hover:bg-red-600 active:scale-95 text-white font-bold rounded-2xl shadow-lg border-b-4 border-red-800 transition-all text-sm sm:text-base">
+          🔥 添加燃料（點擊加熱）
+        </button>
+      `;
+
+      const tempPointer = document.getElementById('temp-pointer');
+      const flame = document.getElementById('lamp-flame');
+      const steam = document.getElementById('steam-group');
+      const btnHeat = document.getElementById('btn-heat');
+
+      let currentTemp = 20; 
+      let gameActive = true;
+      let successDuration = 0; 
+
+      // 溫度衰減與平衡控制
+      tempInterval = setInterval(() => {
+        if (!gameActive) return;
+
+        // 溫度自然下降
+        currentTemp = Math.max(0, currentTemp - 1.5);
+        if (tempPointer) tempPointer.style.left = `${currentTemp}%`;
+
+        // 根據溫度調整火焰縮放
+        if (currentTemp > 15) {
+          if (flame) {
+            flame.classList.remove('hidden');
+            let hScale = 0.3 + (currentTemp / 100) * 0.9;
+            let topY = 75 - (30 * hScale); 
+            let wScale = 0.4 + (currentTemp / 100) * 0.7;
+            let leftX = 50 - (8 * wScale);
+            let rightX = 50 + (8 * wScale);
+            
+            flame.setAttribute('d', `M50,${topY} C${leftX},${topY + 10} ${leftX},70 50,75 C${rightX},70 ${rightX},${topY + 10} 50,${topY} Z`);
+          }
+        } else {
+          if (flame) flame.classList.add('hidden');
+        }
+
+        // 檢查溫度是否在中間紅色完美區間 (35% ~ 65%)
+        if (currentTemp >= 35 && currentTemp <= 65) {
+          if (steam) steam.classList.remove('hidden');
+          successDuration += 100; 
+          actionInstruction.innerText = `溫度完美！豆漿漸漸變性中... (${Math.min(100, Math.round((successDuration/3000)*100))}% )`;
+          
+          if (successDuration >= 3000) {
+            gameActive = false;
+            clearInterval(tempInterval);
+            tempInterval = null;
+            proceedToStep3();
+          }
+        } else if (currentTemp > 65) {
+          if (steam) steam.classList.remove('hidden');
+          actionInstruction.innerText = "⚠️ 太熱了！豆漿快焦掉了，放開按鈕讓它降溫！";
+        } else {
+          if (steam) steam.classList.add('hidden');
+          actionInstruction.innerText = "❄️ 太冷了！快點點擊按鈕，升溫至中間紅色區間！";
+        }
+
+      }, 100);
+
+      btnHeat.addEventListener('click', () => {
+        if (!gameActive) return;
+        currentTemp = Math.min(100, currentTemp + 12);
+        if (tempPointer) tempPointer.style.left = `${currentTemp}%`;
+      });
+    }
+
+    // 進入攪拌階段
+    function proceedToStep3() {
+      actionInstruction.innerText = "滾了！現在立刻倒入剛剛製作的「醋酸鈣溶液」！";
+      controlPanel.innerHTML = `<button id="btn-pour-calcium" class="w-full py-4 bg-amber-500 text-white font-bold rounded-2xl shadow-lg border-b-4 border-amber-700 active:scale-95 transition-all">倒入醋酸鈣 🥣</button>`;
+
+      document.getElementById('btn-pour-calcium').addEventListener('click', () => {
+        currentStep = 3;
+        renderCurrentStep();
+      });
+    }
+
+
+    // --- 步驟 3：均勻攪拌 ---
+    function setupStep3() {
+      stepTitle.innerText = "步驟 3：倒入並均勻攪拌";
+      stepBadge.innerText = "3 / 4";
+      actionInstruction.innerText = "點選「點擊快速攪拌」按鈕，快速攪拌讓鈣離子均勻散佈在豆漿中！";
+      bottomTooltip.innerText = "💡 提示：均勻攪拌可以幫助醋酸鈣與蛋白質分子充分接觸！";
+
+      stageVisual.innerHTML = `
+        <div class="relative w-40 h-40 flex items-center justify-center">
+          <div id="stir-track" class="absolute w-32 h-32 border-4 border-dashed border-orange-300 rounded-full animate-spin" style="animation-duration: 8s;"></div>
+          
+          <svg viewBox="0 0 100 100" class="w-full h-full z-10">
+            <!-- 豆漿碗俯視圖 -->
+            <circle cx="50" cy="50" r="40" fill="#fff" stroke="#f59e0b" stroke-width="4" />
+            <circle cx="50" cy="50" r="36" fill="#fffbfe" />
+            <!-- 漩渦紋路 -->
+            <path id="swirl-line" d="M 30 50 A 20 20 0 0 1 70 50" stroke="#fef3c7" stroke-width="3" fill="none" stroke-linecap="round" class="hidden" />
+            <!-- 攪拌棒 -->
+            <g id="stirring-stick" transform="translate(50,50) rotate(0)">
+              <rect x="-4" y="-35" width="8" height="40" rx="3" fill="#b45309" stroke="#78350f" stroke-width="1.5" />
+            </g>
+          </svg>
+        </div>
+        <div id="stir-progress" class="text-xs font-bold text-amber-700 mt-2">攪拌進度：0%</div>
+      `;
+
+      const stick = document.getElementById('stirring-stick');
+      const track = document.getElementById('stir-track');
+      const swirl = document.getElementById('swirl-line');
+      const progressText = document.getElementById('stir-progress');
+
+      let currentAngle = 0;
+      let targetStirs = 15;
+      let actualStirs = 0;
+
+      controlPanel.innerHTML = `
+        <button id="btn-manual-stir" class="w-full py-4 bg-amber-500 text-white font-bold rounded-2xl shadow-lg border-b-4 border-amber-700 active:scale-95 transition-all text-sm">
+          🌀 點擊快速攪拌 (已攪拌: 0/15 次)
+        </button>
+      `;
+
+      const manualBtn = document.getElementById('btn-manual-stir');
+
+      const triggerStirAnimation = () => {
+        actualStirs++;
+        currentAngle = (currentAngle + 45) % 360;
+        if (stick) stick.setAttribute('transform', `translate(50,50) rotate(${currentAngle})`);
+        
+        if (swirl) {
+          swirl.classList.remove('hidden');
+          swirl.setAttribute('transform', `rotate(${currentAngle * 2} 50 50)`);
+        }
+
+        let pct = Math.min(100, Math.round((actualStirs / targetStirs) * 100));
+        if (progressText) progressText.innerText = `攪拌進度：${pct}%`;
+        if (manualBtn) manualBtn.innerText = `🌀 點擊快速攪拌 (已攪拌: ${actualStirs}/${targetStirs} 次)`;
+
+        if (actualStirs >= targetStirs) {
+          actionInstruction.innerText = "大功告成！攪拌均勻了。現在，將碗「離火」並靜置等待凝固！";
+          controlPanel.innerHTML = `
+            <button id="btn-coagulate" class="w-full py-4 bg-emerald-500 text-white font-bold rounded-2xl shadow-lg border-b-4 border-emerald-700 active:scale-95 transition-all">
+              🍃 離火並靜置凝固
+            </button>
+          `;
+          document.getElementById('btn-coagulate').addEventListener('click', () => {
+            currentStep = 4;
+            renderCurrentStep();
+          });
+        }
+      };
+
+      manualBtn.addEventListener('click', triggerStirAnimation);
+
+      // 支援滑鼠與觸控在虛線圈上移動攪拌
+      track.addEventListener('mousemove', (e) => {
+        if (e.buttons === 1) { 
+          triggerStirAnimation();
+        }
+      });
+      track.addEventListener('touchmove', (e) => {
+        triggerStirAnimation();
+      });
+    }
+
+    // --- 步驟 4：靜置等待凝固 (無火安全，無任何加熱資訊) ---
+    function setupStep4() {
+      clearAllIntervals();
+
+      stepTitle.innerText = "步驟 4：靜置等待，魔術發生！";
+      stepBadge.innerText = "4 / 4";
+      
+      actionInstruction.innerText = "已經離火！靜置中... 鈣離子正與蛋白質分子慢慢凝聚，請靜心等候。";
+      bottomTooltip.innerText = "💡 提示：離火靜置能讓凝膠結構慢慢穩定，靜靜等待奇蹟吧！";
+
+      stageVisual.innerHTML = `
+        <div class="relative w-40 h-40 flex flex-col items-center justify-center">
+          <!-- 漏斗沙漏計時器 -->
+          <div class="w-20 h-20 animate-spin" style="animation-duration: 4s;">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+              <path d="M25,20 L75,20 L65,45 Q60,50 55,50 Q60,50 65,55 L75,80 L25,80 L35,55 Q40,50 45,50 Q40,50 35,45 Z" fill="none" stroke="#d97706" stroke-width="4" />
+              <line x1="50" y1="45" x2="50" y2="78" stroke="#fef3c7" stroke-width="2" stroke-dasharray="2,2" />
+              <path d="M32,25 Q50,45 68,25 Z" fill="#fcd34d" />
+              <path d="M28,78 Q50,60 72,78 Z" fill="#fcd34d" />
+            </svg>
+          </div>
+          <div id="countdown-timer" class="text-2xl font-bold text-amber-800 mt-4">5 秒...</div>
+        </div>
+      `;
+
+      controlPanel.innerHTML = `
+        <div class="w-full bg-orange-200/50 rounded-xl p-3 text-center text-xs font-semibold text-amber-800">
+          豆漿正在慢慢降溫並膠凝中，請稍候 🤫
+        </div>
+      `;
+
+      let remainingTime = 5; 
+      const timerText = document.getElementById('countdown-timer');
+
+      countdownInterval = setInterval(() => {
+        remainingTime--;
+        if (timerText) timerText.innerText = `${remainingTime} 秒...`;
+
+        if (remainingTime <= 0) {
+          clearInterval(countdownInterval);
+          countdownInterval = null;
+          switchScreen(scrSuccess);
+        }
+      }, 1000);
+    }
+
+  </script>
+</body>
+</html>
